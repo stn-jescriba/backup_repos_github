@@ -11,9 +11,8 @@ try {
     
     # FECHA Y RUTAS
     $fecha = Get-Date -Format "yyyy-MM-dd"
-    $baseDir = "C:\backup_repos" # Carpeta base para todos los respaldos
-    $backupDir = "$baseDir\mirror" # Usaremos una única carpeta "mirror" para todos los repos
-    $reposFile = "$baseDir\repos.txt"
+    $baseDir = "C:\backup_repos"
+    $backupDir = "$baseDir\mirror"
     $zipPath = "$baseDir\repos_backup_$fecha.zip"
     
     # VERIFICAR Y CREAR DIRECTORIOS SI NO EXISTEN
@@ -37,8 +36,7 @@ try {
     
     # GUARDAR URLs clone_url EN repos.txt
     $sshUrls = $repos | ForEach-Object { $_.clone_url }
-    $sshUrls | Set-Content $reposFile
-    Write-Host "Se encontraron $($repos.Count) repositorios. La lista se ha guardado en $reposFile."
+    Write-Host "Se encontraron $($repos.Count) repositorios"
     
     # CLONAR CADA REPOSITORIO
     $totalRepos = $sshUrls.Count
@@ -46,8 +44,7 @@ try {
     foreach ($repo in $sshUrls) {
         $i++
         $repoName = $repo.Split('/')[-1]
-        $repoName = $repoName.Replace(".git", "")
-        $destPath = Join-Path -Path $backupDir -ChildPath "$repoName.git"
+        $destPath = Join-Path -Path $backupDir -ChildPath $repoName
     
         if (Test-Path $destPath) {
             Write-Host "($i/$totalRepos) Actualizando $repoName..."
